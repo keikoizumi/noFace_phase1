@@ -49,7 +49,7 @@ def ranking(driver):
             # データベースに接続する
             c = conn.cursor()
             #データ登録
-            sql = "INSERT INTO testdb.yahoo_news_urls (title,url,dt) VALUES (%s,%s,%s)"
+            sql = "INSERT INTO testdb.yahoo_news_urls (site_id,title,url,dt) VALUES (1,%s,%s,%s)"
             c.execute(sql, (title, url, dt))
             
             #idを振りなおす
