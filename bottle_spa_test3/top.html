@@ -8,7 +8,7 @@
 //グローバル変数
 var items = [];
 //上限回数       
-var setTimes = 10;
+var setTimes = 100;
 //チェック関数
 function checkId(data){
          var id = '';
@@ -26,6 +26,7 @@ function checkId(data){
             }
          } else { 
           　if (checkTimes(items)) {
+              items.push('NG');
               getUrl();
             } else {
               items.push('NG');
