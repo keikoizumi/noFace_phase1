@@ -20,46 +20,6 @@ def send_static(filename):
 def index():
     return template('top')
 
-@post('/range')
-def getMaxRange():
-    #data = request.json
-    #today = data['today']
-    print('getMaxRange')
-    f = open('./conf/prop.json', 'r')
-    info = json.load(f)
-    f.close()
-    #DB設定
-    
-    conn = mysql.connector.connect(
-            host = info['host'],
-            port = info['port'],
-            user = info['user'],
-            password = info['password'],
-            database = info['database'],
-    )
-    
-    #データベースに接続する
-    cur = conn.cursor(dictionary=True)  
-    try:    
-        #接続クエリ
-        #TODO
-        sql = 'SELECT COUNT(id) AS count FROM yahoo_news_urls'
-        #クエリ発行
-        cur.execute(sql)
-        cur.statement
-        result = cur.fetchall()
-        print(result)
-        jsonResult = json.dumps(result[0])
-        return jsonResult    
-    except:
-        import traceback
-        traceback.print_exc()
-        print("DBエラーが発生しました")
-        return None
-    finally:
-        cur.close()
-        conn.close()
-
 @get('/spa')
 def getIndex():
     return template('top')
@@ -67,10 +27,7 @@ def getIndex():
 @post('/spa')
 def getMakeUrl():
     #値取得
-    data = request.json
-    ranNo = data['ranNo']
-    #URL取得
-    url = dbconn(ranNo)
+    url = dbconn()
     #ID NULLチェック
     if isUrlCheck(url):
         print('checkedUrl:')
@@ -80,31 +37,8 @@ def getMakeUrl():
         print(type(jsonUrl))
         return jsonUrl
     else:
-        return reMakeUrl() 
+        return getMakeUrl()
    
-def reMakeUrl():
-    #ID発番
-    ranNo = mkranId()
-    print(ranNo)
-    #URL取得
-    url = dbconn(ranNo)
-    #ID NULLチェック
-    if isUrlCheck(url):
-        print('checkedUrl:')
-        #json作成
-        jsonUrl = makeJson(url)
-        print(type(jsonUrl))
-        print(jsonUrl)
-        return jsonUrl
-    else:
-        return reMakeUrl()
-
-def mkranId():
-    setNm = 10
-    list(range(setNm))
-    ranNo = random.randrange(setNm)
-    return ranNo
-
 def isUrlCheck(url):
     if url == None:
         print('チェックNG')
@@ -127,7 +61,7 @@ def isTypeCheck(jsonUrl):
     else:
         jsonDumps(jsonUrl)
     
-def dbconn(ranNo):
+def dbconn():
 
     f = open('./conf/prop.json', 'r')
     info = json.load(f)
@@ -146,15 +80,12 @@ def dbconn(ranNo):
     cur = conn.cursor(dictionary=True)   
     try:    
         #接続クエリ
-        #sql = 'SELECT id, title, url FROM yahoo_news_urls WHERE id ='
-        sql = 'SELECT id, title, url, CAST(dt AS CHAR) AS dt FROM yahoo_news_urls WHERE id ='
+        sql = "SELECT * FROM ( SELECT s.id AS site_id, yu.id, s.table_name, yu.title, yu.url, CAST(yu.dt AS CHAR) AS dt FROM testdb.site s INNER JOIN testdb.yahoo_news_urls yu ON s.id = yu.site_id UNION SELECT s.id AS site_id, bu.id, s.table_name, bu.title, bu.url, CAST(bu.dt AS CHAR) AS dt FROM testdb.site s INNER JOIN testdb.buzzfeed_news_urls bu ON s.id = bu.site_id ) AS allsite WHERE dt like '2020-01-02%' ORDER BY RAND() LIMIT 1"
         #クエリ発行
-        print(ranNo)
-        cur.execute(sql+'%s', [ranNo])
+        cur.execute(sql)
         cur.statement    
         url = cur.fetchall()
         print(url)
-
 
         if url is not None: 
             return url[0]
@@ -170,7 +101,6 @@ def dbconn(ranNo):
         cur.close()
         conn.close()
     
-
         
 if __name__ == "__main__":
     run(host='localhost', port=8080, reloader=True, debug=True)

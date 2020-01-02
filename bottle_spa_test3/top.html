@@ -2,67 +2,34 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>SPA＆Ajax</title>
-<!--<link rel="stylesheet" type="text/css" href="assets/spa.css">-->
+<title>noFace</title>
 <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
-<script language="javascript" type="text/javascript">
-
+<script type="text/javascript">
 //グローバル変数
 var items = [];
 //上限回数       
-var setTimes = 5;
-//ランダムIDの範囲
-var ranNoRange;
-
-window.onload = function(){
-// 今日の日付を取得
-    //ランダム関数の最大レンジの設定
-  $(function(){
-  
-    var targetUrl = 'http://localhost:8080/range'
-    
-    //TODO
-    var request = {
-      'today' : null
-    };
-
-    $.ajax({
-        url: targetUrl,
-        type: 'POST',
-        contentType: 'application/JSON',
-        dataType: 'JSON',
-        data : JSON.stringify(request),
-        scriptCharset: 'utf-8',
-    }).done(function(data){ 
-        /* 通信成功時 */
-        ranNoRange = data.count;
-        console.log(data.count);         
-    }).fail(function(data, XMLHttpRequest, textStatus){
-        /* 通信失敗時 */
-        alert('通信失敗');
-        console.log('通信失敗');
-        console.log(data);
-        console.log("XMLHttpRequest : " + XMLHttpRequest.status);
-        console.log("textStatus     : " + textStatus);
-    });
-});
-}
+var setTimes = 10;
 //チェック関数
 function checkId(data){
          var id = '';
          id = data.id;
          //見つからない場合は-1
          if (items.indexOf(id) == -1){
-            items.push(id);    
-            addTags(data);
-            console.log('通信成功');
-            console.log(data);
-            console.log('items');
-            console.log(items);
-            console.log(items.indexOf(id));
-            console.log('------------------------------------');
+            if (checkTimes(items)) {
+              items.push(id);    
+              addTags(data);
+              console.log('通信成功');
+              console.log(data);
+              console.log('items');
+              console.log(items);
+              console.log('-------------------------------------------------------------');
+            }
          } else { 
-          　checkTimes(items);  
+          　if (checkTimes(items)) {
+            checkId(getUrl());
+            } else {
+              items.push('NG');
+            } 
          }  
 }
 
@@ -73,7 +40,7 @@ function addTags(data){
 }
 
 function checkTimes(items){
-    if (items.length > (setTimes)){
+    if (items.length >= (setTimes)){
         alert('上限回数を超えました。リロードされます。');
         window.location.reload();
         return false;
@@ -82,35 +49,14 @@ function checkTimes(items){
     }   
 }
 
-function mkRanNo(){
-  //ランダム数宇作成
-  var ranNo = '';
-  var ranNo = Math.floor( Math.random() * ranNoRange);
-  return ranNo;
-  console.log('ranNo');
-  console.log(ranNo);
-}
-
 function getUrl(){
   $(function(){
   
     var targetUrl = 'http://localhost:8080/spa'
-    ranNo = mkRanNo();
-
-    //idが未発番でない場合、回数を
-    //確認して新規発番
-    if (items.indexOf(ranNo) != -1) {
-      if (checkTimes(items)) {
-         ranNo = mkRanNo();
-         console.log('JSでid再発行');
-         console.log(ranNo)
-      }
-    }
-
     var request = {
-        'ranNo' : ranNo
+        'ranNo' : null
     };
-
+    
       $.ajax({
           url: targetUrl,
           type: 'POST',
