@@ -80,7 +80,9 @@ def dbconn():
     cur = conn.cursor(dictionary=True)   
     try:    
         #接続クエリ
-        sql = "SELECT * FROM ( SELECT s.id AS site_id, yu.id, s.table_name, yu.title, yu.url, CAST(yu.dt AS CHAR) AS dt FROM testdb.site s INNER JOIN testdb.yahoo_news_urls yu ON s.id = yu.site_id UNION SELECT s.id AS site_id, bu.id, s.table_name, bu.title, bu.url, CAST(bu.dt AS CHAR) AS dt FROM testdb.site s INNER JOIN testdb.buzzfeed_news_urls bu ON s.id = bu.site_id ) AS allsite WHERE dt like '2020-01-02%' ORDER BY RAND() LIMIT 1"
+        #TODO 日付はクライアント側から受け取る
+        sql = "SELECT * FROM site_urls WHERE dt LIKE '2020-01-02%' ORDER BY RAND() LIMIT 1"
+        
         #クエリ発行
         cur.execute(sql)
         cur.statement    
