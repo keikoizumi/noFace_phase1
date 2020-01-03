@@ -81,7 +81,7 @@ def dbconn():
     try:    
         #接続クエリ
         #TODO 日付はクライアント側から受け取る
-        sql = "SELECT * FROM site_urls WHERE dt LIKE '2020-01-02%' ORDER BY RAND() LIMIT 1"
+        sql = "SELECT * FROM site_urls ORDER BY RAND() LIMIT 1"
         
         #クエリ発行
         cur.execute(sql)
