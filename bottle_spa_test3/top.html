@@ -38,6 +38,10 @@ function addTags(data){
   $(function() {
     $('ul').append('<li><a href='+data.url+' target="_blank">'+'['+data.dt+']'+data.title+'</a></li>');
   });
+  $(function() {
+    $('#iframe').append('<iframe src='+'"'+data.url+'"'+'width=1250 height=500>'+'</iframe>');
+  });
+  
 }
 
 function checkTimes(items){
@@ -84,11 +88,35 @@ $(function(){
     getUrl();
   });
 });
+
+$(function(){
+  $('.reset').on('click',function(){
+    window.location.reload();
+  });
+});
+
 </script>
 </head>
 <body>
-  <input type="button" class="sample_btn" value="noFace"/>  	
+  <!-- ifram -->
+  <input type="button" class="sample_btn" value="noFace(random)"/>
+  <!-- 遷移 -->
+  <form action=''> 
+    <input type="button" class="sample_btn" value="today(all)"/>
+  </form>
+  <!-- 遷移 -->
+  <form> 
+    <input type="button" class="sample_btn" value="today(Yahoo)"/> 
+  </form>
+  <!-- 遷移 -->
+  <from>
+    <input type="button" class="sample_btn" value="today(BuzzFeed)"/> 
+  </from>
+  <!-- リセット -->
+</br>
+  <input type="button" class="reset" value="reset"/>
   <ul>
   </ul>
+  <div id='iframe'></div>
 </body>
 </html>
