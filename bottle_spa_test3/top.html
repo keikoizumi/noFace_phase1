@@ -48,18 +48,21 @@ function today(){
 
 function addTags(data){
   $(function() {
-    $('ul').append('<li><a href='+data.url+' target="_blank">'+'['+data.dt+']'+data.title+'</a></li>');
+    $('ul').empty();
+    $('ul').append('['+data.dt+']'+'</br>'+'<a href='+data.url+' target="_blank"><h2>'+data.title+'</h2></a>');
   });
   $(function() {
-    $('#iframe').append('<iframe src='+'"'+data.url+'"'+'width=1250 height=500>'+'</iframe>');
+    $('#iframe').empty();
+    $('#iframe').append('<iframe src='+'"'+data.url+'"'+'width=1250 height=600>'+'</iframe>');
   });
   
 }
 
 function show(data){
   $(function() {
+    $('ol').empty();
     for (var i = 0; i < data.length; i++) {
-      $('ul').append('<li><a href='+data[i].url+' target="_blank">'+'['+data[i].dt+']'+data[i].title+'</a></li>');
+      $('ol').append('<li>['+data[i].dt+']'+' '+'<a href='+data[i].url+' target="_blank">'+data[i].title+'</a></li>');
     }  
   });
 }
@@ -212,22 +215,15 @@ $(function(){
   <!-- ifram -->
   <input type="button" class="random" value="noFace(random)"/>
   <!-- 遷移 -->
-  <form action=''> 
-    <input type="button" class="all" value="today(all)"/>
-  </form>
+  <input type="button" class="all" value="today(all)"/>
   <!-- 遷移 -->
-  <form> 
-    <input type="button" class="other" id="yahoo" value="today(Yahoo)"/> 
-  </form>
+  <input type="button" class="other" id="yahoo" value="today(Yahoo)"/> 
   <!-- 遷移 -->
-  <from>
-    <input type="button" class="other" id="buzzfeed" value="today(BuzzFeed)"/> 
-  </from>
+  <input type="button" class="other" id="buzzfeed" value="today(BuzzFeed)"/> 
   <!-- リセット -->
-</br>
   <input type="button" class="reset" value="reset"/>
-  <ul>
-  </ul>
+  <ul></ul>
   <div id='iframe'></div>
+  <ol></ol>
 </body>
 </html>
