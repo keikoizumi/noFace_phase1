@@ -20,14 +20,12 @@ def send_static(filename):
 def index():
     return template('top')
 
-@get('/spa')
-def getIndex():
-    return template('top')
-
-@post('/spa')
-def getMakeUrl():
+@post('/random')
+def postRandom():
     #値取得
-    url = dbconn()
+    qerytype = 'random'
+    date = '2002-02'
+    url = dbconn(qerytype, date)
     #ID NULLチェック
     if isUrlCheck(url):
         print('checkedUrl:')
@@ -37,12 +35,58 @@ def getMakeUrl():
         print(type(jsonUrl))
         return jsonUrl
     else:
-        return getMakeUrl()
-   
+        return postRandom()
+
+@post('/all')
+def postAll():
+    #値取得
+
+    qerytype = 'all'
+    data = request.json
+    date = data['date']
+    print(qerytype)
+    print(date)
+    url = dbconn(qerytype, date)
+    #ID NULLチェック
+    if isUrlCheck(url):
+        print('checkedUrl:')
+        #json作成
+        jsonUrl = makeJson(url)
+        print(type(jsonUrl))
+        return jsonUrl
+    else:
+        return postAll()
+
+@post('/other')
+def postOther():
+    #値取得
+    data = request.json
+    date = data['date']
+    qerytype = data['other']
+    url = dbconn(qerytype, date)
+    #ID NULLチェック
+    if isUrlCheck(url):
+        print('checkedUrl:')
+        #json作成
+        jsonUrl = makeJson(url)
+        print(type(jsonUrl))
+        return jsonUrl
+    else:
+        return postAll()
+
+
+i = 0
 def isUrlCheck(url):
     if url == None:
         print('チェックNG')
-        return False
+        global i
+        i += 1
+        print('i')
+        print(i)
+        if i < 5:
+            return None 
+        else:
+            return 'DBエラー'
     else:
         print('チェックOK')
         return True
@@ -61,7 +105,9 @@ def isTypeCheck(jsonUrl):
     else:
         jsonDumps(jsonUrl)
     
-def dbconn():
+
+
+def dbconn(qerytype, date):
 
     f = open('./conf/prop.json', 'r')
     info = json.load(f)
@@ -78,19 +124,31 @@ def dbconn():
     
     #データベースに接続する
     cur = conn.cursor(dictionary=True)   
+    
+    print(qerytype)
+    
     try:    
         #接続クエリ
-        #TODO 日付はクライアント側から受け取る
-        sql = "SELECT * FROM site_urls ORDER BY RAND() LIMIT 1"
-        
+        if qerytype == 'random':
+            #TODO 日付はクライアント側から受け取る
+            sql = "SELECT * FROM site_urls ORDER BY RAND() LIMIT 1"
+        elif qerytype == 'all':
+            sql = "SELECT * FROM site_urls"
+        elif qerytype == 'yahoo':
+            sql = "SELECT * FROM site_urls WHERE site_id = 1"
+        elif qerytype == 'buzzfeed':
+            sql = "SELECT * FROM site_urls WHERE site_id = 2"
+
         #クエリ発行
         cur.execute(sql)
         cur.statement    
         url = cur.fetchall()
-        print(url)
 
-        if url is not None: 
-            return url[0]
+        if url is not None:
+            if qerytype == 'random':
+                return url[0]
+            else:
+                return url
         else:
             return None
 

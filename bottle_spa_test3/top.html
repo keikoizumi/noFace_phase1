@@ -7,6 +7,8 @@
 <script type="text/javascript">
 //グローバル変数
 var items = [];
+var otherOne = 'yahoo';
+var otherTow = 'buzzfeed';
 //上限回数       
 var setTimes = 100;
 //チェック関数
@@ -33,6 +35,16 @@ function checkId(data){
             } 
          }  
 }
+function today(){
+  var today = new Date();
+  var year = today.getFullYear();
+  var month = today.getMonth() + 1;
+  var day = today.getDate();
+  var formatedDate = year + '-' + month + '-' + day ; 
+  return formatedDate
+ console.log( formatedDate);
+
+}
 
 function addTags(data){
   $(function() {
@@ -44,6 +56,15 @@ function addTags(data){
   
 }
 
+function show(data){
+  $(function() {
+    for (var i = 0; i < data.length; i++) {
+      $('ul').append('<li><a href='+data[i].url+' target="_blank">'+'['+data[i].dt+']'+data[i].title+'</a></li>');
+    }  
+  });
+}
+
+
 function checkTimes(items){
     if (items.length >= (setTimes)){
         alert('上限回数を超えました。リロードされます。');
@@ -54,14 +75,14 @@ function checkTimes(items){
     }   
 }
 
-function getUrl(){
-  $(function(){
+function random(){
   
-    var targetUrl = 'http://localhost:8080/spa'
+  $(function(){
+    var targetUrl = 'http://localhost:8080/random';
+    var date = today();
     var request = {
-        'ranNo' : null
+        'date' : date
     };
-    
       $.ajax({
           url: targetUrl,
           type: 'POST',
@@ -83,9 +104,101 @@ function getUrl(){
   });
 }
 
+function all(){
+  $(function(){
+    var targetUrl = 'http://localhost:8080/all';
+    var date = today();
+    var request = {
+        'date' : date
+    };
+      $.ajax({
+          url: targetUrl,
+          type: 'POST',
+          contentType: 'application/JSON',
+          dataType: 'JSON',
+          data : JSON.stringify(request),
+          scriptCharset: 'utf-8',
+      }).done(function(data){ 
+          /* 通信成功時 */
+          show(data);         
+        }).fail(function(data, XMLHttpRequest, textStatus){
+          /* 通信失敗時 */
+          alert('通信失敗');
+          console.log('通信失敗');
+          console.log(data);
+          console.log("XMLHttpRequest : " + XMLHttpRequest.status);
+          console.log("textStatus     : " + textStatus);
+      });
+  });
+}
+
+function other(other){
+
+  var targetUrl = 'http://localhost:8080/other'
+  var date = today();
+
+  if (other == otherOne) {
+    var request = {
+        'date' : date,
+        'other':otherOne
+    };
+  } else if (other == otherTow) {
+    var request = {
+        'date' : date,
+        'other':otherTow
+    };  
+  } else {
+    console.log('NG');
+  }
+
+  $(function(){
+      $.ajax({
+          url: targetUrl,
+          type: 'POST',
+          contentType: 'application/JSON',
+          dataType: 'JSON',
+          data : JSON.stringify(request),
+          scriptCharset: 'utf-8',
+      }).done(function(data){ 
+          /* 通信成功時 */
+          show(data); 
+          console.log(data);        
+        }).fail(function(data, XMLHttpRequest, textStatus){
+          /* 通信失敗時 */
+          alert('通信失敗');
+          console.log('通信失敗');
+          console.log(data);
+          console.log("XMLHttpRequest : " + XMLHttpRequest.status);
+          console.log("textStatus     : " + textStatus);
+      });
+  });
+}
+
 $(function(){
-  $('.sample_btn').on('click',function(){
-    getUrl();
+  $('.random').on('click',function(){
+    random();
+  });
+});
+
+$(function(){
+  $('.all').on('click',function(){
+    all();    
+    console.log('all');
+  });
+});
+
+$(function(){
+  
+  $('.other').on('click',function(){
+    
+    var id = $(this).attr('id');
+    console.log(id);
+    if (id == otherOne) {
+      other(otherOne);
+    } else if (id == otherTow) {
+      other(otherTow);
+    }
+
   });
 });
 
@@ -99,18 +212,18 @@ $(function(){
 </head>
 <body>
   <!-- ifram -->
-  <input type="button" class="sample_btn" value="noFace(random)"/>
+  <input type="button" class="random" value="noFace(random)"/>
   <!-- 遷移 -->
   <form action=''> 
-    <input type="button" class="sample_btn" value="today(all)"/>
+    <input type="button" class="all" value="today(all)"/>
   </form>
   <!-- 遷移 -->
   <form> 
-    <input type="button" class="sample_btn" value="today(Yahoo)"/> 
+    <input type="button" class="other" id="yahoo" value="today(Yahoo)"/> 
   </form>
   <!-- 遷移 -->
   <from>
-    <input type="button" class="sample_btn" value="today(BuzzFeed)"/> 
+    <input type="button" class="other" id="buzzfeed" value="today(BuzzFeed)"/> 
   </from>
   <!-- リセット -->
 </br>
