@@ -23,8 +23,9 @@ def index():
 @post('/random')
 def postRandom():
     #値取得
+    data = request.json
+    date = data['date']
     qerytype = 'random'
-    date = '2002-02'
     url = dbconn(qerytype, date)
     #ID NULLチェック
     if isUrlCheck(url):
@@ -44,8 +45,7 @@ def postAll():
     qerytype = 'all'
     data = request.json
     date = data['date']
-    print(qerytype)
-    print(date)
+    
     url = dbconn(qerytype, date)
     #ID NULLチェック
     if isUrlCheck(url):
@@ -126,20 +126,21 @@ def dbconn(qerytype, date):
     cur = conn.cursor(dictionary=True)   
     
     print(qerytype)
-    
+    print(date)
     try:    
         #接続クエリ
         if qerytype == 'random':
             #TODO 日付はクライアント側から受け取る
-            sql = "SELECT * FROM site_urls ORDER BY RAND() LIMIT 1"
+            sql = "SELECT * FROM site_urls WHERE dt LIKE '"+date+'%'+"'"+" ORDER BY RAND() LIMIT 1"
         elif qerytype == 'all':
-            sql = "SELECT * FROM site_urls"
+            sql = "SELECT * FROM site_urls WHERE dt LIKE '"+date+'%'"'"
         elif qerytype == 'yahoo':
-            sql = "SELECT * FROM site_urls WHERE site_id = 1"
+            sql = "SELECT * FROM site_urls WHERE site_id = 1 AND dt LIKE '"+date+'%'"'"
         elif qerytype == 'buzzfeed':
-            sql = "SELECT * FROM site_urls WHERE site_id = 2"
+            sql = "SELECT * FROM site_urls WHERE site_id = 2 AND dt LIKE '"+date+'%'"'"
 
         #クエリ発行
+        print(sql)
         cur.execute(sql)
         cur.statement    
         url = cur.fetchall()

@@ -36,13 +36,13 @@ function checkId(data){
          }  
 }
 function today(){
-  var today = new Date();
-  var year = today.getFullYear();
-  var month = today.getMonth() + 1;
-  var day = today.getDate();
-  var formatedDate = year + '-' + month + '-' + day ; 
-  return formatedDate
- console.log( formatedDate);
+  /** 現在のDateオブジェクト作成 */
+  var d = new Date();
+ 
+  /** 日付を文字列にフォーマットする */
+  var formatted = `${d.getFullYear()}-${(d.getMonth()+1).toString().padStart(2, '0')}-${d.getDate().toString().padStart(2, '0')}`;
+  console.log(formatted);
+  return formatted;
 
 }
 
@@ -188,9 +188,7 @@ $(function(){
 });
 
 $(function(){
-  
   $('.other').on('click',function(){
-    
     var id = $(this).attr('id');
     console.log(id);
     if (id == otherOne) {
