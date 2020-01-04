@@ -13,7 +13,9 @@ STATIC_DIR = os.path.join(BASE_DIR, 'static')
 #CSS
 @route('/assets/css/<filename:path>')
 def send_static(filename):
-    return static_file(filename, root=f'{STATIC_DIR}/css')
+    sfile = static_file(filename, root=f'{STATIC_DIR}/css')
+    print(sfile)
+    return sfile
 
 #rootの場合
 @route("/")
@@ -38,25 +40,6 @@ def postRandom():
     else:
         return postRandom()
 
-@post('/all')
-def postAll():
-    #値取得
-
-    qerytype = 'all'
-    data = request.json
-    date = data['date']
-    
-    url = dbconn(qerytype, date)
-    #ID NULLチェック
-    if isUrlCheck(url):
-        print('checkedUrl:')
-        #json作成
-        jsonUrl = makeJson(url)
-        print(type(jsonUrl))
-        return jsonUrl
-    else:
-        return postAll()
-
 @post('/other')
 def postOther():
     #値取得
@@ -72,7 +55,7 @@ def postOther():
         print(type(jsonUrl))
         return jsonUrl
     else:
-        return postAll()
+        return postOther()
 
 
 i = 0
@@ -86,7 +69,7 @@ def isUrlCheck(url):
         if i < 5:
             return None 
         else:
-            return 'DBエラー'
+            return True
     else:
         print('チェックOK')
         return True
@@ -105,7 +88,6 @@ def isTypeCheck(jsonUrl):
     else:
         jsonDumps(jsonUrl)
     
-
 
 def dbconn(qerytype, date):
 
