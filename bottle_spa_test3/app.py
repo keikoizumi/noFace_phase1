@@ -6,16 +6,25 @@ import random
 import json
 import os
 
+#サイト
+RANDOM = 'random'
+ALL = 'all'
+OTHERONE = 'yahoo'
+OTHERTWO = 'buzzfeed'
+
 #ファイルパス
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_DIR = os.path.join(BASE_DIR, 'static')
 
 #CSS
-@route('/assets/css/<filename:path>')
-def send_static(filename):
-    sfile = static_file(filename, root=f'{STATIC_DIR}/css')
-    print(sfile)
-    return sfile
+@route('/static/css/<filename:path>')
+def send_static_css(filename):
+    return static_file(filename, root=f'{STATIC_DIR}/css')
+
+#JS
+@route('/static/js/<filename:path>')
+def send_static_js(filename):
+    return static_file(filename, root=f'{STATIC_DIR}/js')
 
 #rootの場合
 @route("/")
@@ -111,14 +120,14 @@ def dbconn(qerytype, date):
     print(date)
     try:    
         #接続クエリ
-        if qerytype == 'random':
+        if qerytype == RANDOM:
             #TODO 日付はクライアント側から受け取る
             sql = "SELECT * FROM site_urls WHERE dt LIKE '"+date+'%'+"'"+" ORDER BY RAND() LIMIT 1"
-        elif qerytype == 'all':
+        elif qerytype == ALL:
             sql = "SELECT * FROM site_urls WHERE dt LIKE '"+date+'%'"'"
-        elif qerytype == 'yahoo':
+        elif qerytype == OTHERONE:
             sql = "SELECT * FROM site_urls WHERE site_id = 1 AND dt LIKE '"+date+'%'"'"
-        elif qerytype == 'buzzfeed':
+        elif qerytype == OTHERTWO:
             sql = "SELECT * FROM site_urls WHERE site_id = 2 AND dt LIKE '"+date+'%'"'"
 
         #クエリ発行
