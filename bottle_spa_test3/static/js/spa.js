@@ -17,9 +17,6 @@ function checkId(data){
               addTags(data);
               console.log('通信成功');
               console.log(data);
-              console.log('items');
-              console.log(items);
-              console.log('-------------------------------------------------------------');
             }
          } else { 
           　if (checkTimes(items)) {
@@ -138,24 +135,20 @@ function other(other){
 }
 
 
-/*function setTimer(){
-  var startRandom = function(){
-    random();
-  };
-  var setStartInterval = setInterval(startRandom, 3000);
-  return setStartInterval;
-}
-*/
-var setStartInterval;
 window.onload = function(){
 // ページ読み込み時に実行したい処理
-   random();
+random();
+
 }
 
 
 $(function(){ 
   $('#start').on('click',function(){
-    random();
+
+    var start = function(){
+      random();
+    };
+    var timer = setInterval(start, 10000);
     console.log('start');
   });
 });
@@ -182,30 +175,11 @@ $(function(){
 
 $(function(){
   $('.reset').on('click',function(){
+    clearInterval(timer);
     window.location.reload();
   });
 });
 
-$('#area').change(function() {
-    var r = $('option:selected').val();
-    
-    console.log(r);
-})
-/*
-//Tableの設定
-$("#table").DataTable({
-  // 件数切替機能 無効
-  lengthChange: false,
-  // 検索機能 無効
-  searching: false,
-  // ソート機能 無効
-  ordering: true,
-  // 情報表示 無効
-  info: false,
-  // ページング機能 無効
-  paging: false
-});
-*/
 //初回時、start時
 function addTags(data){
   $('#table').empty();
