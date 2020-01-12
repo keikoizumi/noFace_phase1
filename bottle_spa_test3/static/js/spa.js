@@ -41,30 +41,6 @@ function today(){
 
 }
 
-function addTags(data){
-  $('ol').empty();
-  $(function() {
-    $('ul').empty();
-    $('ul').append('['+data.dt+']'+'</br>'+'<a href='+data.url+' target="_blank"><h2>'+data.title+'</h2></a>');
-  });
-  $(function() {
-    $('#iframe').empty();
-    $('#iframe').append('<iframe src='+'"'+data.url+'"'+'width=1250 height=600>'+'</iframe>');
-  });
-  
-}
-
-function show(data){
-  $(function() {
-    $('ul').empty();
-    $('ol').empty();
-    $('#iframe').empty();
-    for (var i = 0; i < data.length; i++) {
-      $('ol').append('<li><a href='+data[i].url+' target="_blank">'+data[i].title+'</a></li>');
-    }  
-  });
-}
-
 
 function checkTimes(items){
     if (items.length >= (setTimes)){
@@ -169,13 +145,13 @@ function other(other){
   var setStartInterval = setInterval(startRandom, 3000);
   return setStartInterval;
 }
-
+*/
 var setStartInterval;
 window.onload = function(){
 // ページ読み込み時に実行したい処理
-  setStartInterval = setTimer()
+   random();
 }
-*/
+
 
 $(function(){ 
   $('#start').on('click',function(){
@@ -215,3 +191,43 @@ $('#area').change(function() {
     
     console.log(r);
 })
+/*
+//Tableの設定
+$("#table").DataTable({
+  // 件数切替機能 無効
+  lengthChange: false,
+  // 検索機能 無効
+  searching: false,
+  // ソート機能 無効
+  ordering: true,
+  // 情報表示 無効
+  info: false,
+  // ページング機能 無効
+  paging: false
+});
+*/
+//初回時、start時
+function addTags(data){
+  $('#table').empty();
+  $(function() {
+    $('#table').append('<tr><td>1</td><td><a href='+data.url+' target="_blank">'+data.title+'</a></td></tr>');
+  });
+  $(function() {
+    $('#iframe').empty();
+    $('#iframe').append('<iframe src='+'"'+data.url+'"'+'width=1110 height=700>'+'</iframe>');
+  });
+  
+}
+
+//その他
+function show(data){
+  $(function() {
+    $('#table').empty();
+    $('#iframe').empty();
+    //$('#table').append('<thead><tr><th>ID</th><th>タイトル</th></tr></thead>');
+    for (var i = 0; i < data.length; i++) {
+      var id = i+1;
+      $('#table').append('<tr><td>'+id+'</td><td><a href='+data[i].url+' target="_blank">'+data[i].title+'</a></td></tr>');
+    }  
+  });
+}

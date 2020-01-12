@@ -1,20 +1,83 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
+ <!-- Required meta tags -->
+ <meta charset="utf-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+ <!-- Bootstrap CSS -->
+ <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+ <!--<link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">-->
+
 <title>noFace</title>
-<link rel="stylesheet" href="/static/css/spa.css" type="text/css" />
-<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js" integrity="sha384-6khuMg9gaYr5AxOqhkVIODVIvm9ynTT5J4V1cfthmT+emCG6yVmEZsRHdxlotUnm" crossorigin="anonymous"></script>
-<script src="/static/js/spa.js"></script>
+<!--<link rel="stylesheet" href="/static/css/spa.css" type="text/css" />-->
+
 </head>
 <body>
-  <input type="button" class="random" id="start" value="noFace(start)"/>
-  <input type="button" class="other" id="all" value="today(all)"/>
-  <input type="button" class="other" id="yahoo" value="today(Yahoo)"/> 
-  <input type="button" class="other" id="buzzfeed" value="today(BuzzFeed)"/> 
-  <input type="button" class="reset" value="reset"/>
-  <ul></ul>
-  <ol></ol>
+  <div class="container" >
+    <div class="row">
+      <div class="col-md">
+        <div class="d-inline-block">
+          <div class="random" id="start">
+            <a href="#" class="btn btn-outline-primary" role="button">noFace(start)</a>
+          </div>
+        </div>
+        <div class="d-inline-block">
+          <div class="other" id="all">
+            <a href="#" class="btn btn-outline-danger" role="button">today(all)</a>
+          </div>
+        </div>
+        <div class="d-inline-block">
+          <div class="other" id="yahoo">
+            <a href="#" class="btn btn-outline-success" role="button">today(Yahoo)</a>
+          </div>
+        </div>
+          <div class="d-inline-block">
+          <div class="other" id="buzzfeed">
+            <a href="#" class="btn btn-outline-info" role="button">today(BuzzFeed)</a>
+          </div>
+        </div>
+        <div class="d-inline-block">
+          <div class="reset">
+            <a href="#" class="btn btn-outline-secondary" role="button">reset</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  <div class="display-area">
+    <table class="table table-striped table-bordered">
+        <thead class="thead-dark">
+          <tr>
+            <th>ID</th>
+            <th>タイトル</th>
+          </tr>
+        </thead>
+        <tbody id="table">
+        </tbody>
+    </table>
+    <div id="iframe" ></div>
+  </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <!--<script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>-->
+    
+    <!--<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+    <!--独自js-->
+    <script src="/static/js/spa.js"></script>
+    <!--<script>
+      $(function(){
+          // datatableの設定を変更
+          $("#table1").DataTable({
+              "language": {
+                  "url": "//cdn.datatables.net/plug-ins/1.10.16/i18n/Japanese.json"
+              }
+          });
+      });
+      </script>-->
   </body>
 </html>
