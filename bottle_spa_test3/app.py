@@ -30,6 +30,7 @@ def send_static_js(filename):
 @route("/")
 def index():
     return template('top')
+    #return template('test')
 
 @post('/random')
 def postRandom():

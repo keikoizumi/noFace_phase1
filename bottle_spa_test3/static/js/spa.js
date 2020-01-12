@@ -145,11 +145,11 @@ random();
 $(function(){ 
   $('#start').on('click',function(){
 
-    var start = function(){
+    //var start = function(){
       random();
-    };
-    var timer = setInterval(start, 10000);
-    console.log('start');
+    //};
+    //var timer = setInterval(start, 10000);
+    //console.log('start');
   });
 });
 
@@ -175,7 +175,7 @@ $(function(){
 
 $(function(){
   $('.reset').on('click',function(){
-    clearInterval(timer);
+    //clearInterval(timer);
     window.location.reload();
   });
 });
@@ -188,7 +188,7 @@ function addTags(data){
   });
   $(function() {
     $('#iframe').empty();
-    $('#iframe').append('<iframe src='+'"'+data.url+'"'+'width=1110 height=700>'+'</iframe>');
+    $('#iframe').append('<iframe style="border:none" src='+'"'+data.url+'"'+'width=1110 height=700>'+'</iframe>');
   });
   
 }
