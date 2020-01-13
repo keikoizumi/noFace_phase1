@@ -7,6 +7,7 @@ import logging
 from selenium import webdriver 
 
 
+#URL = []
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -41,16 +42,26 @@ def main(driver):
             class_group = driver.find_elements_by_class_name("topicsListItem")
             # タイトルとリンクを抽出しリストに追加するforループ    
             for elem in class_group:
-
+                
                 # データ登録用
                 title = elem.find_element_by_tag_name('a').text
                 url = elem.find_element_by_tag_name('a').get_attribute('href')
-            
-                #日にち取得
+                ##img名前
                 now = datetime.datetime.now()
-                dt = "{0:%Y-%m-%d %H:%M:%S}".format(now)
+                dt = "{0:%Y%m%d%H%M%S}".format(now)
+                fname = str(dt)
+                print(fname)
+                driver.execute_script("window.open()") #make new tab
+                driver.switch_to.window(driver.window_handles[1]) #switch new tab
+                driver.get(url)
+                r=driver.get_screenshot_as_file(BASE_DIR+'/img/'+fname+'.png')
+                print(r)
+                driver.close()
+                driver.switch_to.window(driver.window_handles[0])
+
                 #DB設定
                 f = open('./bottle_spa_test3/conf/prop.json', 'r')
+                #f = open('./conf/prop.json', 'r')
                 info = json.load(f)
                 f.close()
 
@@ -61,13 +72,15 @@ def main(driver):
                     password = info['password'],
                     database = info['database']
                 )
-
+                #日にち取得
+                now = datetime.datetime.now()
+                dt = "{0:%Y-%m-%d %H:%M:%S}".format(now)
                 # データベースに接続する
                 c = conn.cursor()
                 #データ登録
                 sql = "INSERT INTO testdb.yahoo_news_urls (site_id,title,url,dt) VALUES (1,%s,%s,%s)"
                 c.execute(sql, (title, url, dt))
-            
+                print(sql)
                 #idを振りなおす
                 sql = 'SET @i := 0' 
                 c.execute(sql)
@@ -78,13 +91,31 @@ def main(driver):
                 conn.commit()
                 # データベースへのアクセスが終わったら close する
                 conn.close()
-            i = i_max + 1   
+            i = i_max + 1  
+        
+    #print(URL)
+
+        #driver.back()
+    except:
+        logger.debug('debug exception')
+    finally:
+        
+        # ブラウザを閉じる
+        driver.quit()
+
+def shot():
+    try:
+        for i in range(len(URL)):
+            print(URL)
+            driver.get(URL[i])
+            #カレントページのスクリーンショットを取得しDドライブに保存
+            sfile = driver.get_screenshot_as_file(BASE_DIR+'/img/aaa.png')
+            print(sfile)     
     except:
         logger.debug('debug exception')
     finally:
         # ブラウザを閉じる
-        driver.quit() 
-                       
+        driver.quit()                   
         
 # ranking関数を実行
 main(driver)
