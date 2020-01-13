@@ -9,7 +9,7 @@ var otherOne = 'yahoo';
 var otherTow = 'buzzfeed';
 
 //上限回数       
-var setTimes = 100;
+var setTimes = 200;
 //チェック関数
 function checkId(data){
          var id = '';
@@ -188,7 +188,6 @@ function getPastDay(){
 }
 
 
-
 //初回アクセス時
 window.onload = function(){
   random();
@@ -197,18 +196,20 @@ window.onload = function(){
 }
 
 //noFace
-$(function(){ 
-  $('#start').on('click',function(){
-      random();
-  });
-});
+//$(function(){ 
+//  $('#start').on('click',function(){
+//    random();
+//  });
+//});
 
 //TODAY(OTHER)
 $(function(){
   $('.other').on('click',function(){
     var id = $(this).attr('id');
     var pastDate = null;
-
+    if (timerID != null) {
+      countStop();
+    }
     if (id == all) {
       other(all,pastDate);
     } else if (id == otherOne) {
@@ -222,13 +223,16 @@ $(function(){
 //プルダウン選択時
 $(function(){
   $('#ddmenu').on('click',function(){
+    if (timerID != null) {
+      countStop();
+    }
     var pastDate = $("#ddmenu").val();
     other(all,pastDate);
     console.log(pastDate);
   });
 });
 
-//
+//リセット
 $(function(){
   $('.reset').on('click',function(){
     //リロード
