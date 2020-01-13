@@ -1,5 +1,9 @@
 //グローバル変数
 var items = [];
+//var tUrl = 'http://192.168.179.5:8080/';
+var tUrl = 'http://437b5552.ngrok.io/';
+//var tUrl = 'http://noface.com:8080/';
+
 var all = 'all';
 var otherOne = 'yahoo';
 var otherTow = 'buzzfeed';
@@ -51,7 +55,7 @@ function checkTimes(items){
 
 function random(){  
   $(function(){
-    var targetUrl = 'http://localhost:8080/random';
+    var targetUrl = tUrl+'random';
     var date = today();
     var request = {
         'date' : date
@@ -65,11 +69,11 @@ function random(){
           scriptCharset: 'utf-8',
       }).done(function(data){ 
           /* 通信成功時 */
-          if (data == null) {
-             
-            alert('データがありません');
+          if (data == null || data == '' || data[0] == '') {
+            $('#table').empty();
+            $('#iframe').empty();
+            $('#table').append('<tr><td>1</td><td>データがありません</td></tr>');
           } else {
-            console.log(data);
             checkId(data); 
           }
         }).fail(function(data, XMLHttpRequest, textStatus){
@@ -83,28 +87,40 @@ function random(){
   });
 }
 
-function other(other){
+function other(other,pastDate){
 
-  var targetUrl = 'http://localhost:8080/other'
-  var date = today();
+  var targetUrl = tUrl+'other';
+  var date = null;
 
-  if (other == all) {
-    var request = {
-        'date' : date,
-        'other': all
-    };
-  } else if (other == otherOne) {
-    var request = {
-        'date' : date,
-        'other': otherOne
-    };
-  } else if (other == otherTow) {
-    var request = {
-        'date' : date,
-        'other': otherTow
-    };  
+  if (pastDate == null || pastDate == '') {
+    date = today();  
   } else {
-    console.log('NG');
+    date = pastDate;
+  }
+
+  if (date != null) {
+    if (other == all) {
+      var request = {
+          'date' : date,
+          'other': all
+      };
+    } else if (other == otherOne) {
+      var request = {
+          'date' : date,
+          'other': otherOne
+      };
+    } else if (other == otherTow) {
+      var request = {
+          'date' : date,
+          'other': otherTow
+      };  
+    }
+  } else {
+    alert('不正な日付');
+    var request = {
+      'date' : today(),
+      'other': all
+    };
   }
 
   $(function(){
@@ -117,8 +133,10 @@ function other(other){
           scriptCharset: 'utf-8',
       }).done(function(data){ 
           /* 通信成功時 */
-          if (data == null) {
-            alert('データがありません');
+          if (data == null || data == '' || data[0] == '') {
+            $('#table').empty();
+            $('#iframe').empty();
+            $('#table').append('<tr><td>1</td><td>データがありません</td></tr>');
           } else {
             show(data); 
           }
@@ -134,48 +152,51 @@ function other(other){
   });
 }
 
-
+//初回アクセス時
 window.onload = function(){
-// ページ読み込み時に実行したい処理
 random();
-
+//プルダウンデータ取得
+  //$(".dropdown-item").append($("<option>").val("2020-01-12").text("2020-01-12"));
+  $("dropdown-menu").append($("<a>").val("2020-01-12").text("2020-01-12"));
 }
 
-
+//noFace
 $(function(){ 
   $('#start').on('click',function(){
-
-    //var start = function(){
       random();
-    //};
-    //var timer = setInterval(start, 10000);
-    //console.log('start');
   });
 });
 
+//TODAY(OTHER)
 $(function(){
   $('.other').on('click',function(){
     var id = $(this).attr('id');
-    console.log(id);
+    var pastDate = null;
+
     if (id == all) {
-      other(all);
+      other(all,pastDate);
     } else if (id == otherOne) {
-      other(otherOne);
+      other(otherOne,pastDate);
     } else if (id == otherTow) {
-      other(otherTow);
+      other(otherTow,pastDate);
     }
   });
 });
 
+//プルダウン選択時
 $(function(){
-  $('.reset').on('click',function(){
-    window.location.reload();
+  $('.dropdown-menu').on('click',function(){
+    var pastDate = $('.dropdown-item').text();
+    other(all,pastDate);
+    console.log(pastDate);
+    console.log("bbbbbbbbbbbbbbbbbbbbbbb");
   });
 });
 
+//
 $(function(){
   $('.reset').on('click',function(){
-    //clearInterval(timer);
+    //リロード
     window.location.reload();
   });
 });
@@ -189,8 +210,7 @@ function addTags(data){
   $(function() {
     $('#iframe').empty();
     $('#iframe').append('<iframe style="border:none" src='+'"'+data.url+'"'+'width=1110 height=700>'+'</iframe>');
-  });
-  
+  });  
 }
 
 //その他
