@@ -152,12 +152,48 @@ function other(other,pastDate){
   });
 }
 
+function getPastDay(){  
+  $(function(){
+    var targetUrl = tUrl+'getPastDay';
+    
+      $.ajax({
+          url: targetUrl,
+          type: 'POST',
+          contentType: 'application/JSON',
+          dataType: 'JSON',
+          data : null,
+          scriptCharset: 'utf-8',
+      }).done(function(data){ 
+          /* 通信成功時 */
+          if (data == null || data == '' || data[0] == '') {
+            $('#table').empty();
+            $('#iframe').empty();
+            $('#table').append('<tr><td>1</td><td>データがありません</td></tr>');
+          } else {
+            console.log(data[1]);
+            console.log(data.length);
+            for (var i = 0; i < data.length; i++) {
+              $("#ddmenu").append('<option value="'+data[i].dt+'">'+data[i].dt+'</a>');
+            }
+          }
+        }).fail(function(data, XMLHttpRequest, textStatus){
+          /* 通信失敗時 */
+          alert('通信失敗');
+          console.log('通信失敗');
+          console.log(data);
+          console.log("XMLHttpRequest : " + XMLHttpRequest.status);
+          console.log("textStatus     : " + textStatus);
+      });
+  });
+}
+
+
+
 //初回アクセス時
 window.onload = function(){
-random();
-//プルダウンデータ取得
-  //$(".dropdown-item").append($("<option>").val("2020-01-12").text("2020-01-12"));
-  $("dropdown-menu").append($("<a>").val("2020-01-12").text("2020-01-12"));
+  //random();
+  //プルダウンデータ取得
+  getPastDay();
 }
 
 //noFace
@@ -185,11 +221,10 @@ $(function(){
 
 //プルダウン選択時
 $(function(){
-  $('.dropdown-menu').on('click',function(){
-    var pastDate = $('.dropdown-item').text();
+  $('#ddmenu').on('click',function(){
+    var pastDate = $("#ddmenu").val();
     other(all,pastDate);
     console.log(pastDate);
-    console.log("bbbbbbbbbbbbbbbbbbbbbbb");
   });
 });
 
@@ -218,7 +253,6 @@ function show(data){
   $(function() {
     $('#table').empty();
     $('#iframe').empty();
-    //$('#table').append('<thead><tr><th>ID</th><th>タイトル</th></tr></thead>');
     for (var i = 0; i < data.length; i++) {
       var id = i+1;
       $('#table').append('<tr><td>'+id+'</td><td><a href='+data[i].url+' target="_blank">'+data[i].title+'</a></td></tr>');

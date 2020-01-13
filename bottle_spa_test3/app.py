@@ -1,6 +1,7 @@
 # coding:utf-8
 from bottle import run, static_file, template, redirect
 from bottle import request, route, get, post
+from bottle import hook, response
 import mysql.connector
 import random
 import json
@@ -8,6 +9,7 @@ import os
 
 #サイト
 RANDOM = 'random'
+PASTDAY = 'pastday'
 ALL = 'all'
 OTHERONE = 'yahoo'
 OTHERTWO = 'buzzfeed'
@@ -25,6 +27,11 @@ def send_static_css(filename):
 @route('/static/js/<filename:path>')
 def send_static_js(filename):
     return static_file(filename, root=f'{STATIC_DIR}/js')
+
+#CROS対策
+@hook('after_request')
+def enable_cors():
+    response.headers['Access-Control-Allow-Origin'] = '*'
 
 #rootの場合
 @route("/")
@@ -67,6 +74,20 @@ def postOther():
     else:
         return postOther()
 
+@post('/getPastDay')
+def pastDay():
+    date = None
+    qerytype = PASTDAY
+    url = dbconn(qerytype, date)
+    #ID NULLチェック
+    if isUrlCheck(url):
+        print('checkedUrl:')
+        #json作成
+        jsonUrl = makeJson(url)
+        print(type(jsonUrl))
+        return jsonUrl
+    else:
+        return postOther()
 
 i = 0
 def isUrlCheck(url):
@@ -117,8 +138,6 @@ def dbconn(qerytype, date):
     #データベースに接続する
     cur = conn.cursor(dictionary=True)   
     
-    print(qerytype)
-    print(date)
     try:    
         #接続クエリ
         if qerytype == RANDOM:
@@ -130,6 +149,8 @@ def dbconn(qerytype, date):
             sql = "SELECT * FROM site_urls WHERE site_id = 1 AND dt LIKE '"+date+'%'"'"
         elif qerytype == OTHERTWO:
             sql = "SELECT * FROM site_urls WHERE site_id = 2 AND dt LIKE '"+date+'%'"'"
+        elif qerytype == PASTDAY:
+            sql = "SELECT DISTINCT sDt.dt FROM (SELECT DATE_FORMAT(dt,'%Y-%m-%d') as dt FROM site_urls ) sDt ORDER BY sDt.dt DESC LIMIT 7"
 
         #クエリ発行
         print(sql)
@@ -156,4 +177,7 @@ def dbconn(qerytype, date):
     
         
 if __name__ == "__main__":
-    run(host='localhost', port=8080, reloader=True, debug=True)
+    #run(host='localhost', port=8080, reloader=True, debug=True)
+    #run(host="noFace.com", port=8080, debug=True, reloader=True)
+    run(host="0.0.0.0", port=8080, debug=True, reloader=True)
+
