@@ -191,7 +191,7 @@ function getPastDay(){
 
 //初回アクセス時
 window.onload = function(){
-  //random();
+  random();
   //プルダウンデータ取得
   getPastDay();
 }
