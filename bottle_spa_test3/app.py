@@ -172,7 +172,7 @@ def dbconn(qerytype, date):
         elif qerytype == OTHERTWO:
             sql = "SELECT * FROM site_urls WHERE site_id = 2 AND dt LIKE '"+date+'%'"'"
         elif qerytype == PASTDAY:
-            sql = "SELECT DISTINCT sDt.dt FROM (SELECT DATE_FORMAT(dt,'%Y-%m-%d') as dt FROM site_urls ) sDt ORDER BY sDt.dt DESC LIMIT 7"
+            sql = "SELECT DISTINCT sDt.dt FROM (SELECT DATE_FORMAT(dt,'%Y-%m-%d') as dt FROM site_urls ) sDt ORDER BY sDt.dt DESC"
 
         #クエリ発行
         print(sql)
@@ -262,10 +262,12 @@ def main(driver):
                 #img名前
                 iid = str("{0:%H%M%S}".format(now))
                 imgId = iid + p
+                #driver.set_window_size(1280, 720)
                 driver.execute_script("window.open()") #make new tab
                 driver.switch_to.window(driver.window_handles[1]) #switch new tab
                 driver.get(url)
                 time.sleep(1)
+                #driver.set_window_size(1280 + w_add, 720 + h_add)
                 driver.get_screenshot_as_file(BASE_DIR+'/static/img/Selenium/'+d+'/'+imgId+'.png')
                 driver.close()
                 driver.switch_to.window(driver.window_handles[0])

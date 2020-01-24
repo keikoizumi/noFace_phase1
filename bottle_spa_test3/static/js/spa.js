@@ -102,15 +102,16 @@ function scraping() {
           $('#table').empty();
           $('#iimg').empty();
           if (data == 'True') {
-            $('#table').append('<tr><td>info</td><td>成功しました</td></tr>');
+            $('#table').append('<tr><td>info</td><td>Success</td></tr>');
+            other(all,pastDate);
           } else {
-            $('#table').append('<tr><td>info</td><td>失敗しました</td></tr>');
+            $('#table').append('<tr><td>info</td><td>Failure</td></tr>');
           }
         }).fail(function(data, XMLHttpRequest, textStatus) {
           /* 通信失敗時 */
           $('#table').empty();
           $('#iimg').empty();
-          $('#table').append('<tr><td>info</td><td>失敗しました</td></tr>');
+          $('#table').append('<tr><td>info</td><td>Failure</td></tr>');
           alert('通信失敗');
           console.log('通信失敗');
           console.log(data);
@@ -169,7 +170,7 @@ function other(other,pastDate) {
           if (data == null || data == '' || data[0] == '') {
             $('#table').empty();
             $('#iimg').empty();
-            $('#table').append('<tr><td>info</td><td>データがありません</td></tr>');
+            $('#table').append('<tr><td>info</td><td>NO DATA</td></tr>');
           } else {
             show(data); 
           }
@@ -201,7 +202,7 @@ function getPastDay() {
           if (data == null || data == '' || data[0] == '') {
             $('#table').empty();
             $('#iimg').empty();
-            $('#table').append('<tr><td>info</td><td>データがありません</td></tr>');
+            $('#table').append('<tr><td>info</td><td>NO DATA</td></tr>');
           } else {
             console.log(data[1]);
             console.log(data.length);
@@ -235,7 +236,7 @@ $(function(){
     scraping();
     $('#table').empty();
     $('#iimg').empty();
-    $('#table').append('<tr><td>info</td><td>実行中</td></tr>');
+    $('#table').append('<tr><td>info</td><td>Running</td></tr>');
   });
 });
 
@@ -303,7 +304,7 @@ function show(data) {
     $('#iimg').empty();
     for (var i = 0; i < data.length; i++) {
       var id = i+1;
-      $('#table').append('<tr><td>'+id+'</td><td><a href='+data[i].url+' target="_blank">'+data[i].title+'</a>　<a href='+data[i].url+' target="_blank"><img src="./static/img/Selenium/'+dirNaeme+'/'+data[i].img_id+'.png" width="350" height="250" alt="no image"></a></td></tr>');
+      $('#table').append('<tr><td>'+data[i].dt+'</td><td><a href='+data[i].url+' target="_blank">'+data[i].title+'</a>　　　<a href='+data[i].url+' target="_blank"><img src="./static/img/Selenium/'+dirNaeme+'/'+data[i].img_id+'.png" width="600" height="450" alt="no image"></a></td></tr>');
     }  
   });
 }
