@@ -13,7 +13,7 @@ from selenium import webdriver
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-LOG_LEVEL_FILE = 'WARNING'
+LOG_LEVEL_FILE = 'ERROR'
 # フォーマットを指定
 _detail_formatting = '%(asctime)s %(levelname)-8s [%(module)s#%(funcName)s %(lineno)d] %(message)s'
 
@@ -24,27 +24,31 @@ logging.basicConfig(
 )
 
 logger = logging.getLogger(__name__)
-logger.warning('IF EXIT WARNING, SHOW BELLOW')
+logger.error('IF EXIT ERROR, SHOW BELLOW')
 
-#ディレクトリ存在確認
-dpath = BASE_DIR+'/img/'
-if not os.path.exists(dpath):
-    os.makedirs(dpath)
-else:
-    now = datetime.datetime.now()
-    dt = "{0:%Y%m%d}".format(now)
-    path = BASE_DIR+'/img/'+dt
-    if not os.path.isdir(path):
-        os.makedirs(path)        
+    
 
 #定数一覧
-driver = webdriver.Chrome(BASE_DIR+'./chromedriver.exe')
-targetUrl = 'https://news.yahoo.co.jp/'
+try:
+    #ディレクトリ存在確認
+    dpath = BASE_DIR+'/img/'
+    if not os.path.exists(dpath):
+        os.makedirs(dpath)
+    else:
+        now = datetime.datetime.now()
+        dt = "{0:%Y%m%d}".format(now)
+        path = BASE_DIR+'/img/'+dt
+    if not os.path.isdir(path):
+        os.makedirs(path)
 
-#遷移   
-driver.get(targetUrl)       
-
-time.sleep(1)
+    driver = webdriver.Chrome(BASE_DIR+'./chromedriver.exe')
+    targetUrl = 'https://news.yahoo.co.jp/'
+    #遷移   
+    driver.get(targetUrl)   
+except Exception as e:
+    logger.error(e)
+finally:
+    time.sleep(1)
 
 def main(driver):
     # ループ番号、ページ番号を定義
@@ -66,9 +70,9 @@ def main(driver):
                 d = str("{0:%Y%m%d}".format(now))
                 letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
                 p = ''.join(random.choices(letters, k=1))
-                ##img名前
+                #img名前
                 iid = str("{0:%H%M%S}".format(now))
-                imgId = p + iid
+                imgId = iid + p
 
                 driver.execute_script("window.open()") #make new tab
                 driver.switch_to.window(driver.window_handles[1]) #switch new tab
@@ -79,8 +83,9 @@ def main(driver):
                 driver.switch_to.window(driver.window_handles[0])
 
                 #DB設定
-                #f = open('./bottle_spa_test3/conf/prop.json', 'r')
-                f = open('./conf/prop.json', 'r')
+                f = open('./bottle_spa_test3/conf/prop.json', 'r')
+                #f = open('./conf/prop.json', 'r')
+
                 info = json.load(f)
                 f.close()
 
@@ -111,10 +116,9 @@ def main(driver):
                 conn.close()
             i = i_max + 1  
         
-    except:
-        logger.debug('debug exception')
+    except Exception as e:
+        logger.error(e)
     finally:
-        
         # ブラウザを閉じる
         driver.quit()         
         

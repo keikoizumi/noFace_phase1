@@ -1,8 +1,9 @@
 //グローバル変数
 var items = [];
 //var tUrl = 'http://192.168.179.5:8080/';
-var tUrl = 'http://437b5552.ngrok.io/';
-//var tUrl = 'http://noface.com:8080/';
+//var tUrl = 'http://437b5552.ngrok.io/';
+//var tUrl = 'http://noFace.com:8080/';
+var tUrl = 'http://localhost:8080/';
 
 var all = 'all';
 var otherOne = 'yahoo';
@@ -11,16 +12,15 @@ var otherTow = 'buzzfeed';
 //上限回数       
 var setTimes = 200;
 //チェック関数
-function checkId(data){
+function checkId(data) {
          var id = '';
          id = data.id;
          //見つからない場合は-1
-         if (items.indexOf(id) == -1){
+         if (items.indexOf(id) == -1) {
             if (checkTimes(items)) {
               items.push(id);    
               addTags(data);
-              console.log('通信成功');
-              console.log(data);
+              console.log('通信成功');              
             }
          } else { 
           　if (checkTimes(items)) {
@@ -31,7 +31,8 @@ function checkId(data){
             } 
          }  
 }
-function today(){
+
+function today() {
   /** 現在のDateオブジェクト作成 */
   var d = new Date();
  
@@ -42,10 +43,9 @@ function today(){
 
 }
 
-
-function checkTimes(items){
-    if (items.length >= (setTimes)){
-        alert('上限回数を超えました。リロードされます。');
+function checkTimes(items) {
+    if (items.length >= (setTimes)) {
+        //alert('上限回数を超えました。リロードされます。');
         window.location.reload();
         return false;
     } else {
@@ -53,7 +53,7 @@ function checkTimes(items){
     }   
 }
 
-function random(){  
+function random() {  
   $(function(){
     var targetUrl = tUrl+'random';
     var date = today();
@@ -71,12 +71,12 @@ function random(){
           /* 通信成功時 */
           if (data == null || data == '' || data[0] == '') {
             $('#table').empty();
-            $('#iframe').empty();
+            $('#iimg').empty();
             $('#table').append('<tr><td>1</td><td>データがありません</td></tr>');
           } else {
             checkId(data); 
           }
-        }).fail(function(data, XMLHttpRequest, textStatus){
+        }).fail(function(data, XMLHttpRequest, textStatus) {
           /* 通信失敗時 */
           alert('通信失敗');
           console.log('通信失敗');
@@ -87,7 +87,7 @@ function random(){
   });
 }
 
-function other(other,pastDate){
+function other(other,pastDate) {
 
   var targetUrl = tUrl+'other';
   var date = null;
@@ -123,7 +123,7 @@ function other(other,pastDate){
     };
   }
 
-  $(function(){
+  $(function() {
       $.ajax({
           url: targetUrl,
           type: 'POST',
@@ -131,17 +131,17 @@ function other(other,pastDate){
           dataType: 'JSON',
           data : JSON.stringify(request),
           scriptCharset: 'utf-8',
-      }).done(function(data){ 
+      }).done(function(data) { 
           /* 通信成功時 */
           if (data == null || data == '' || data[0] == '') {
             $('#table').empty();
-            $('#iframe').empty();
+            $('#iimg').empty();
             $('#table').append('<tr><td>1</td><td>データがありません</td></tr>');
           } else {
             show(data); 
           }
           console.log(data);        
-        }).fail(function(data, XMLHttpRequest, textStatus){
+        }).fail(function(data, XMLHttpRequest, textStatus) {
           /* 通信失敗時 */
           alert('通信失敗');
           console.log('通信失敗');
@@ -152,7 +152,7 @@ function other(other,pastDate){
   });
 }
 
-function getPastDay(){  
+function getPastDay() {  
   $(function(){
     var targetUrl = tUrl+'getPastDay';
     
@@ -163,11 +163,11 @@ function getPastDay(){
           dataType: 'JSON',
           data : null,
           scriptCharset: 'utf-8',
-      }).done(function(data){ 
+      }).done(function(data) { 
           /* 通信成功時 */
           if (data == null || data == '' || data[0] == '') {
             $('#table').empty();
-            $('#iframe').empty();
+            $('#iimg').empty();
             $('#table').append('<tr><td>1</td><td>データがありません</td></tr>');
           } else {
             console.log(data[1]);
@@ -176,7 +176,7 @@ function getPastDay(){
               $("#ddmenu").append('<option value="'+data[i].dt+'">'+data[i].dt+'</a>');
             }
           }
-        }).fail(function(data, XMLHttpRequest, textStatus){
+        }).fail(function(data, XMLHttpRequest, textStatus) {
           /* 通信失敗時 */
           alert('通信失敗');
           console.log('通信失敗');
@@ -189,22 +189,23 @@ function getPastDay(){
 
 
 //初回アクセス時
-window.onload = function(){
-  random();
+window.onload = function() {
+  //today;
+  //other(all,pastDate);
   //プルダウンデータ取得
   getPastDay();
 }
 
 //noFace
-//$(function(){ 
-//  $('#start').on('click',function(){
-//    random();
-//  });
-//});
+$(function(){ 
+  $('#start').on('click',function(){
+    scraping();
+  });
+});
 
 //TODAY(OTHER)
-$(function(){
-  $('.other').on('click',function(){
+$(function() {
+  $('.other').on('click',function() {
     var id = $(this).attr('id');
     var pastDate = null;
     if (timerID != null) {
@@ -221,8 +222,8 @@ $(function(){
 });
 
 //プルダウン選択時
-$(function(){
-  $('#ddmenu').on('click',function(){
+$(function() {
+  $('#ddmenu').on('click',function() {
     if (timerID != null) {
       countStop();
     }
@@ -233,33 +234,39 @@ $(function(){
 });
 
 //リセット
-$(function(){
-  $('.reset').on('click',function(){
+$(function() {
+  $('.reset').on('click',function() {
     //リロード
     window.location.reload();
   });
 });
 
-//初回時、start時
-function addTags(data){
-  $('#table').empty();
+function addTags(data) {
+  imgId = data.img_id;
+  console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaa');
   $(function() {
-    $('#table').append('<tr><td>1</td><td><a href='+data.url+' target="_blank">'+data.title+'</a></td></tr>');
+    $('#table').empty();
+    //$('#table').append('<tr><td>1</td><td><a href='+data.url+' target="_blank">'+data.title+'</a></td></tr>');
   });
   $(function() {
-    $('#iframe').empty();
-    $('#iframe').append('<iframe style="border:none" src='+'"'+data.url+'"'+'width=1110 height=700>'+'</iframe>');
+    $('#iimg').empty();
+    //$('#iframe').append('<iframe style="border:none" src='+'"'+data.url+'"'+'width=111 height=70>'+'</iframe>');
+    $('#iimg').append('<img src="./static/img/20200118/D142902.png" width="1000" height="500" alt="テスト">');
   });  
 }
 
 //その他
-function show(data){
+function show(data) {
   $(function() {
+    var dirDay = today();
+    var dirNaeme = dirDay.replace( /-/g , "" ) ;
+    console.log(data);
+    console.log(dirNaeme);
     $('#table').empty();
-    $('#iframe').empty();
+    $('#iimg').empty();
     for (var i = 0; i < data.length; i++) {
       var id = i+1;
-      $('#table').append('<tr><td>'+id+'</td><td><a href='+data[i].url+' target="_blank">'+data[i].title+'</a></td></tr>');
+      $('#table').append('<tr><td>'+id+'</td><td><a href='+data[i].url+' target="_blank">'+data[i].title+'</a><a href='+data[i].url+' target="_blank"><img src="./static/img/Selenium/'+dirNaeme+'/'+data[i].img_id+'.png" width="350" height="200" alt="no image"></a></td></tr>');
     }  
   });
 }

@@ -7,6 +7,8 @@ import random
 import json
 import os
 
+#import scraping_yahoo
+
 #サイト
 RANDOM = 'random'
 PASTDAY = 'pastday'
@@ -28,6 +30,11 @@ def send_static_css(filename):
 def send_static_js(filename):
     return static_file(filename, root=f'{STATIC_DIR}/js')
 
+#JS
+@route('/static/img/<filename:path>')
+def send_static_img(filename):
+    return static_file(filename, root=f'{STATIC_DIR}/img')
+
 #CROS対策
 @hook('after_request')
 def enable_cors():
@@ -46,6 +53,7 @@ def postRandom():
     date = data['date']
     qerytype = 'random'
     url = dbconn(qerytype, date)
+
     #ID NULLチェック
     if isUrlCheck(url):
         print('checkedUrl:')
@@ -174,10 +182,11 @@ def dbconn(qerytype, date):
     finally:
         cur.close()
         conn.close()
-    
+
+def 
         
 if __name__ == "__main__":
-    #run(host='localhost', port=8080, reloader=True, debug=True)
+    run(host='localhost', port=8080, reloader=True, debug=True)
     #run(host="noFace.com", port=8080, debug=True, reloader=True)
-    run(host="0.0.0.0", port=8080, debug=True, reloader=True)
+    #run(host="0.0.0.0", port=8080, debug=True, reloader=True)
 
