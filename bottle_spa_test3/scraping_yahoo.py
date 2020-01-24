@@ -117,7 +117,7 @@ def main(driver):
             i = i_max + 1  
         
     except Exception as e:
-        logger.error(e)
+        #logger.error(e)
     finally:
         # ブラウザを閉じる
         driver.quit()         

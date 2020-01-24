@@ -10,7 +10,7 @@ var otherOne = 'yahoo';
 var otherTow = 'buzzfeed';
 
 //上限回数       
-var setTimes = 200;
+var setTimes = 1;
 //チェック関数
 function checkId(data) {
          var id = '';
@@ -25,7 +25,7 @@ function checkId(data) {
          } else { 
           　if (checkTimes(items)) {
               items.push('NG');
-              random();
+              //random();
             } else {
               items.push('NG');
             } 
@@ -53,7 +53,7 @@ function checkTimes(items) {
     }   
 }
 
-function random() {  
+/*function random() {  
   $(function(){
     var targetUrl = tUrl+'random';
     var date = today();
@@ -68,7 +68,6 @@ function random() {
           data : JSON.stringify(request),
           scriptCharset: 'utf-8',
       }).done(function(data){ 
-          /* 通信成功時 */
           if (data == null || data == '' || data[0] == '') {
             $('#table').empty();
             $('#iimg').empty();
@@ -77,7 +76,41 @@ function random() {
             checkId(data); 
           }
         }).fail(function(data, XMLHttpRequest, textStatus) {
+          alert('通信失敗');
+          console.log('通信失敗');
+          console.log(data);
+          console.log("XMLHttpRequest : " + XMLHttpRequest.status);
+          console.log("textStatus     : " + textStatus);
+      });
+  });
+}
+*/
+function scraping() {  
+  $(function(){
+    var targetUrl = tUrl+'scraping';
+    //var request = null;
+      $.ajax({
+          url: targetUrl,
+          type: 'POST',
+          //contentType: 'application/TEXT',
+          //dataType: 'JSON',
+          //data : JSON.stringify(request),
+          scriptCharset: 'utf-8',
+      }).done(function(data){ 
+          /* 通信成功時 */
+          console.log(data);
+          $('#table').empty();
+          $('#iimg').empty();
+          if (data == 'True') {
+            $('#table').append('<tr><td>info</td><td>成功しました</td></tr>');
+          } else {
+            $('#table').append('<tr><td>info</td><td>失敗しました</td></tr>');
+          }
+        }).fail(function(data, XMLHttpRequest, textStatus) {
           /* 通信失敗時 */
+          $('#table').empty();
+          $('#iimg').empty();
+          $('#table').append('<tr><td>info</td><td>失敗しました</td></tr>');
           alert('通信失敗');
           console.log('通信失敗');
           console.log(data);
@@ -136,7 +169,7 @@ function other(other,pastDate) {
           if (data == null || data == '' || data[0] == '') {
             $('#table').empty();
             $('#iimg').empty();
-            $('#table').append('<tr><td>1</td><td>データがありません</td></tr>');
+            $('#table').append('<tr><td>info</td><td>データがありません</td></tr>');
           } else {
             show(data); 
           }
@@ -168,7 +201,7 @@ function getPastDay() {
           if (data == null || data == '' || data[0] == '') {
             $('#table').empty();
             $('#iimg').empty();
-            $('#table').append('<tr><td>1</td><td>データがありません</td></tr>');
+            $('#table').append('<tr><td>info</td><td>データがありません</td></tr>');
           } else {
             console.log(data[1]);
             console.log(data.length);
@@ -200,6 +233,9 @@ window.onload = function() {
 $(function(){ 
   $('#start').on('click',function(){
     scraping();
+    $('#table').empty();
+    $('#iimg').empty();
+    $('#table').append('<tr><td>info</td><td>実行中</td></tr>');
   });
 });
 
@@ -208,9 +244,10 @@ $(function() {
   $('.other').on('click',function() {
     var id = $(this).attr('id');
     var pastDate = null;
-    if (timerID != null) {
+    /*if (timerID != null) {
       countStop();
     }
+    */
     if (id == all) {
       other(all,pastDate);
     } else if (id == otherOne) {
@@ -224,9 +261,10 @@ $(function() {
 //プルダウン選択時
 $(function() {
   $('#ddmenu').on('click',function() {
-    if (timerID != null) {
+    /*if (timerID != null) {
       countStop();
     }
+    */
     var pastDate = $("#ddmenu").val();
     other(all,pastDate);
     console.log(pastDate);
@@ -243,7 +281,6 @@ $(function() {
 
 function addTags(data) {
   imgId = data.img_id;
-  console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaa');
   $(function() {
     $('#table').empty();
     //$('#table').append('<tr><td>1</td><td><a href='+data.url+' target="_blank">'+data.title+'</a></td></tr>');
@@ -266,7 +303,7 @@ function show(data) {
     $('#iimg').empty();
     for (var i = 0; i < data.length; i++) {
       var id = i+1;
-      $('#table').append('<tr><td>'+id+'</td><td><a href='+data[i].url+' target="_blank">'+data[i].title+'</a><a href='+data[i].url+' target="_blank"><img src="./static/img/Selenium/'+dirNaeme+'/'+data[i].img_id+'.png" width="350" height="200" alt="no image"></a></td></tr>');
+      $('#table').append('<tr><td>'+id+'</td><td><a href='+data[i].url+' target="_blank">'+data[i].title+'</a>　<a href='+data[i].url+' target="_blank"><img src="./static/img/Selenium/'+dirNaeme+'/'+data[i].img_id+'.png" width="350" height="250" alt="no image"></a></td></tr>');
     }  
   });
 }
